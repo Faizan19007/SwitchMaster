@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   FlatList,
-  PermissionsAndroid,
-  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -20,7 +18,7 @@ import { RootStackParamList } from '../../App';
 
 type Main = NativeStackScreenProps<RootStackParamList, 'MainScreen'>
 
-function App({navigation}:Main ): React.JSX.Element {
+function App({ navigation }: Main): React.JSX.Element {
   useEffect(() => {
     BluetoothService.init()
     pairedDevice()
@@ -28,6 +26,11 @@ function App({navigation}:Main ): React.JSX.Element {
   const [pairedDevices, setPairedDevices] = useState<BluetoothDevice[]>([])
   const [unpairedDevices, setUnPairedDevices] = useState<BluetoothDevice[]>([])
   async function pairedDevice() {
+
+    //empty the previous list to avoid duplicate devices in the list
+    if(pairedDevice.length > 0){
+      setPairedDevices([])
+    }
     setPairedDevices(await BluetoothService.getPairedDevices())
   }
   async function scanDevices() {
@@ -45,10 +48,10 @@ function App({navigation}:Main ): React.JSX.Element {
 
   async function connect(address: string) {
     let response = await BluetoothService.connectTo(address)
-    if(response){
+    if (response) {
       ToastAndroid.show("connected", 5)
     }
-    else{
+    else {
       ToastAndroid.show("connection error", 5)
     }
 
@@ -56,55 +59,47 @@ function App({navigation}:Main ): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.sectionContainer}>
-      {/* <Text style={styles.sectionTitle}>Bletooth App</Text> */}
       <Button title="start scaning"
         onPress={() => {
-          scanDevices()
+          pairedDevice()
         }}
       />
-      <Text style={styles.sectionTitle}>Paired Devices</Text>
-      {/* <TouchableOpacity
-      onPress={()=> navigation.navigate("MsgScreen", {address: "asd"})}
-      
-      >
-        <Text>DEvice</Text>
-      </TouchableOpacity> */}
-
+      {/* <Button title='demo'
+      onPress={()=> navigation.navigate("MsgScreen", {address:"1234567"})}/> */}
+      <Text style={styles.sectionTitle}>Available Devices</Text>
       <FlatList
         data={pairedDevices}
         keyExtractor={(item) => item.address}
         renderItem={({ item }) => {
           // console.log(item)
           return (
-            <View style={{borderWidth:2, marginVertical:5}}>
+            <View style={{ borderWidth: 1, marginVertical: 5 }}>
               <TouchableOpacity
-              style={styles.device}
-              onPress={() => {
-                // await BluetoothService.connectTo(item.address)
-                // navigation.navigate("MsgScreen", {address:item.address})
-                // sendData(item.address)
-                // display a floating window with input of ssid and password
-                // RNBluetoothClassic.connectToDevice(item.address)
-                //   .then(() => console.log("conntedted"))
-                //   .catch(error => console.error(error))
-              }}
-            >
+                style={styles.device}
+                onPress={() => {
+                  // await BluetoothService.connectTo(item.address)
+                  // navigation.navigate("MsgScreen", {address:item.address})
+                  // sendData(item.address)
+                  // display a floating window with input of ssid and password
+                  // RNBluetoothClassic.connectToDevice(item.address)
+                  //   .then(() => console.log("conntedted"))
+                  //   .catch(error => console.error(error))
+                }}
+              >
 
-              <Text>{item.name || "undefined"}</Text>
-              {/* <Text>{item.address}</Text> */}
-            </TouchableOpacity>
-            <Button title='connect' onPress={()=>connect(item.address)}/>
-            <View style={{marginVertical:6}}></View>
-            <Button title='Send Msg' onPress={()=> 
-              navigation.navigate("MsgScreen", {address:item.address})
-              }/>
+                <Text>{item.name || "undefined"}</Text>
+                {/* <Text>{item.address}</Text> */}
+              </TouchableOpacity>
+              <Button title='connect' onPress={() => connect(item.address)} />
+              <View style={{ marginVertical: 6 }}></View>
+              <Button title='Send Msg' onPress={() =>
+                navigation.navigate("MsgScreen", { address: item.address })
+              } />
             </View>
-            
+
           )
         }}
       />
-      <Text style={styles.sectionTitle}>Available Devices (unpaired) </Text>
-
     </SafeAreaView>
   );
 }

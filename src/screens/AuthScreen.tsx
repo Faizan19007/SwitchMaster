@@ -1,6 +1,6 @@
 import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-// import auth from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 
 //navigation
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
@@ -50,11 +50,11 @@ const AuthScreen = ({ navigation }: Auth) => {
       auth()
         .signInWithEmailAndPassword(email, password)
         .then(async (userDetails) => {
-          // setUser(userDetails.user['uid'])
+          console.log(userDetails.user['uid'])
           setUser(email.split('@')[0])
-          const username:string = email.split('@')[0]
+          // const username:string = email.split('@')[0]
           // Store the credentials
-          await Keychain.setGenericPassword(username, password);
+          // await Keychain.setGenericPassword(username, password);
           navigate()
 
         })
@@ -79,7 +79,7 @@ const AuthScreen = ({ navigation }: Auth) => {
         setUser(email.split('@')[0])
         const username:string = email.split('@')[0]
         // Store the credentials
-        await Keychain.setGenericPassword(username, password);
+        // await Keychain.setGenericPassword(username, password);
 
         navigate()
       })
@@ -102,23 +102,8 @@ const AuthScreen = ({ navigation }: Auth) => {
 
   return (
     // <Layout>
-      <Animated.View style={[{ opacity: fadein, transform: [{ translateY: positionAnim }], }]}>
+      <Animated.View style={[{ opacity: fadein, transform: [{ translateY: positionAnim }], flex:1, justifyContent:"center", alignItems:"center" }]}>
         <Text style={{ color: "red", fontSize: 18, textAlign: "center", padding: 10 }}>{error}</Text>
-        {/* <View style={{ flexDirection: "row", justifyContent: "space-around", marginBottom: 20 }}>
-          <TouchableOpacity style={[styles.sso, { backgroundColor: "red" }]}>
-            <Text style={{ fontSize: 40, color: "yellow" }}>G</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.sso, , { backgroundColor: "blue" }]}>
-            <Text style={{ fontSize: 40, color: "white" }}>f</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        <View style={{ flexDirection: "row", marginBottom: 15, justifyContent: "space-between", alignItems: "center" }}>
-          <View style={styles.separator} />
-          {/* <Text style={{ color: "black" }}>OR</Text> */}
-          <View style={styles.separator} />
-        </View>
-
         <View style={styles.container}>
           <TextInput
             style={[styles.buttonStyle, styles.input, styles.size]}
@@ -135,10 +120,10 @@ const AuthScreen = ({ navigation }: Auth) => {
           />
 
           <TouchableOpacity
-            // onPress={signup}
-            onPress={()=>{
-              navigation.navigate("HomeScreen")
-            }}
+            onPress={signup}
+            // onPress={()=>{
+            //   navigation.navigate("HomeScreen")
+            // }}
             style={[styles.size, styles.buttonStyle]}>
             {log == true &&
               <Text style={styles.sectionTitle}>Login</Text>

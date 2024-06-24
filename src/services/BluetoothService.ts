@@ -90,7 +90,7 @@ class BluetoothService {
         // send data
 
     }
-    async sendData(address: string, msg: string) {
+    async sendData(address: string, msg: string): Promise<Boolean> {
         try {
             // console.log( address)
             ToastAndroid.show("sending Msg", 5)
@@ -99,17 +99,18 @@ class BluetoothService {
             console.log("msg send " + resp)
             if(resp){
                 ToastAndroid.show("sent successfully", 2)
+                return true
             }
             else{
                 ToastAndroid.show("not sent", 2)
-
+                return false
             }
-            // return resp
+            return resp
         }
         catch (error) {
             console.error(error)
             ToastAndroid.show(`${error}`, 5)
-            // return false
+            return false
         }
 
 
